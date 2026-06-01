@@ -1,0 +1,16 @@
+require("dotenv").config();
+
+const configs = {
+  PORT: process.env.PORT || 3000,
+  POSTGRES_HOST: process.env.POSTGRES_HOST,
+  POSTGRES_USER: process.env.POSTGRES_USER,
+  POSTGRES_PASSWORD: process.env.POSTGRES_PASSWORD,
+  POSTGRES_DB: process.env.POSTGRES_DB,
+  PAYSTACK_BASE_URL: process.env.PAYSTACK_BASE_URL,
+  PAYSTACK_TEST_SECRET_KEY: process.env.PAYSTACK_TEST_SECRET_KEY,
+  PAYSTACK_TEST_PUBLIC_KEY: process.env.PAYSTACK_TEST_PUBLIC_KEY,
+  PAYSTACK_LIVE_SECRET_KEY: process.env.PAYSTACK_LIVE_SECRET_KEY,
+  PAYSTACK_LIVE_PUBLIC_KEY: process.env.PAYSTACK_LIVE_PUBLIC_KEY,
+};
+
+export default configs;

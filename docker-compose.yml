@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  postgres:
+    container_name: postgres
+    image: postgres:latest
+    ports:
+      - "5432:5432"
+    volumes:
+      - /data/pgdata:/data/pgdata
+    env_file:
+      - .env
+    networks:
+      - web
+  
+  subme-vtu-backend:
+    container_name: subme-vtu-backend
+    build: .
+    volumes:
+      - ./:/usr/src/app
+    ports:
+      - "5000:5000"
+    command: npm run dev
+    networks:
+      - web
+    depends_on:
+      - postgres
+    restart: on-failure
+
+  pgadmin:
+    container_name: pgadmin
+    links:
+      - postgres
+    image: dpage/pgadmin4:latest
+    ports:
+      - "8080:80"
+    volumes:
+      - /data/pgadmin:/root/.pgadmin
+    env_file:
+      - .env
+    networks:
+      - web
+
+networks:
+  web:
+    driver: bridge
