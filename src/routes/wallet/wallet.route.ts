@@ -16,6 +16,11 @@ const routes: RouteParams[] = [
     route: "/balance",
     handler: walletController.getWalletBalance,
   },
+  {
+    method: "POST",
+    route: "/transfer",
+    handler: walletController.postTransferFunds,
+  },
 ];
 
 routes.forEach((route) => {

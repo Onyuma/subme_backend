@@ -49,6 +49,86 @@ class WalletController {
     });
   });
 
+  postTransferFunds = asyncWrapper(async (req: Request, resp: Response) => {
+    const { senderUid, recipientUid, amount } = req.body;
+    if (
+      !senderUid ||
+      typeof senderUid !== "string" ||
+      !recipientUid ||
+      typeof recipientUid !== "string" ||
+      !amount
+    ) {
+      throw new BadRequestError(
+        "Sender ID, recipient ID, and amount are required"
+      );
+    }
+    if (recipientUid === senderUid) {
+      throw new BadRequestError("Sender and recipient cannot be the same");
+    }
+    const parsedAmount = parseFloat(amount);
+    if (typeof parsedAmount !== "number" || parsedAmount <= 0) {
+      throw new BadRequestError("Invalid amount");
+    }
+    const sender = await User.findOne({
+      where: {
+        uid: senderUid,
+      },
+    });
+    if (!sender) {
+      throw new BadRequestError("Sender not found");
+    }
+    const senderProfile = await sender.getProfile();
+    if (!senderProfile) {
+      throw new BadRequestError("Sender profile not found");
+    }
+    if (!senderProfile.is_active) {
+      throw new BadRequestError(
+        "Sender account deactivated. Please contact support."
+      );
+    }
+    const senderWallet = await sender.getWallet();
+    if (!senderWallet) {
+      throw new BadRequestError("Sender wallet not found");
+    }
+    if (
+      senderWallet.balance < parsedAmount ||
+      senderWallet.balance - parsedAmount < 0
+    ) {
+      throw new BadRequestError("Insufficient funds in sender's wallet");
+    }
+    const recipient = await User.findOne({
+      where: {
+        uid: recipientUid,
+      },
+    });
+    if (!recipient) {
+      throw new BadRequestError("Recipient not found");
+    }
+    const recipientProfile = await recipient.getProfile();
+    if (!recipientProfile) {
+      throw new BadRequestError("Recipient profile not found");
+    }
+    if (!recipientProfile.is_active) {
+      throw new BadRequestError(
+        "Recipient account deactivated. Please contact support."
+      );
+    }
+    const recipientWallet = await recipient.getWallet();
+    if (!recipientWallet) {
+      throw new BadRequestError("Recipient wallet not found");
+    }
+
+    senderWallet.balance -= parsedAmount;
+    recipientWallet.balance += parsedAmount;
+    await senderWallet.save();
+    await recipientWallet.save();
+
+    resp.status(StatusCodes.OK).json({
+      success: true,
+      message: "Funds transferred successfully",
+    });
+  });
+
   getWalletBalance = asyncWrapper(async (req: Request, resp: Response) => {
     const { uid } = req.query;
     if (!uid || typeof uid !== "string") {

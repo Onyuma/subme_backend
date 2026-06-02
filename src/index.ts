@@ -8,9 +8,11 @@ import connection from "./utils/database";
 import vtuRouter from "./routes/vtu/datareloaded.routes";
 import userRouter from "./routes/user/user.route";
 import walletRouter from "./routes/wallet/wallet.route";
+import helmet from "helmet";
 
 const app: Application = express();
 
+app.use(helmet());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
