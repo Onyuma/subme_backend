@@ -1,3 +1,11 @@
+import { RequestHandler } from "express";
+
+export type RouteParams = {
+  route: string;
+  method: "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
+  handler: any;
+};
+
 export namespace Paystack {
   export type InitializeTransactionArgs = {
     email: string;
@@ -32,6 +40,7 @@ export namespace Paystack {
     data: {
       reference: string;
       amount: number;
+      status: string;
       metadata: {
         name: string;
         email: string;

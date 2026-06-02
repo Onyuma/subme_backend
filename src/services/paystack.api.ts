@@ -11,7 +11,7 @@ class PaystackApi extends BaseApi {
     },
   };
   constructor() {
-    super(configs.PAYSTACK_BASE_URL!);
+    super(configs.PAYSTACK_BASE_URL as string);
   }
 
   initialize = async (body: Paystack.InitializeTransactionArgs) => {
