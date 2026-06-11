@@ -1,19 +1,29 @@
 import { NextFunction, Request, Response } from "express";
-import configs from "../configs";
-import { ApiError } from "../ApiError";
+import { ApiError, ZodError } from "../ApiError";
+import * as z from "zod";
+import { StatusCodes } from "http-status-codes";
 
 export class ErrorHandler {
   static handleError = (
-    err: ApiError,
+    err: ApiError | z.ZodError,
     req: Request,
     resp: Response,
     next: NextFunction
   ) => {
-    const statusCode = err.statusCode || 500;
-    const message = err.message || "Internal Server Error";
-    resp.status(statusCode).json({
-      success: false,
-      message: message,
-    });
+    if (err instanceof ApiError) {
+      const statusCode = err.statusCode || 500;
+      const message = err.message || "Internal Server Error";
+      resp.status(statusCode).json({
+        success: false,
+        message: message,
+      });
+    }
+    if (err instanceof z.ZodError) {
+      resp.status(500).json({
+        success: false,
+        message: "Validation error",
+        reasons: err.issues,
+      });
+    }
   };
 }

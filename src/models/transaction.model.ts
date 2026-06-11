@@ -1,7 +1,10 @@
 import { DataTypes } from "sequelize";
 import { Column, Model, Table } from "sequelize-typescript";
-
-@Table({ tableName: "transactions", timestamps: true })
+@Table({
+  tableName: "transactions",
+  timestamps: true,
+  modelName: "transaction",
+})
 export default class Transaction extends Model {
   @Column({
     type: DataTypes.UUID,

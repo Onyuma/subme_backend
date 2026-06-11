@@ -2,9 +2,12 @@ import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import asyncWrapper from "../../utils/asyncwrapper";
 import User from "../../models/user.model";
-import { BadRequestError } from "../../utils/ApiError";
+import { BadRequestError, ZodError } from "../../utils/ApiError";
 import jsonwebtoken from "jsonwebtoken";
+import bcrypt from "bcryptjs";
 import configs from "../../utils/configs";
+import { LoginUserScheme } from "../../types";
+import { success } from "zod";
 
 class UserController {
   postRegisterUser = asyncWrapper(async (req: Request, resp: Response) => {
@@ -64,6 +67,42 @@ class UserController {
           phone,
         },
       },
+    });
+  });
+
+  postLoginUser = asyncWrapper(async (req: Request, resp: Response) => {
+    const parsed = LoginUserScheme.safeParse(req.body);
+    if (parsed.error) {
+      throw new ZodError(parsed.error.issues);
+    }
+
+    const user = await User.findOne({
+      where: {
+        email: parsed.data.email,
+      },
+    });
+
+    if (!user) {
+      throw new BadRequestError("User not found");
+    }
+    const checkPassword = await bcrypt.compare(
+      parsed.data.password,
+      user.password
+    );
+    if (!checkPassword) {
+      throw new BadRequestError(
+        "Invalid credientials, check your entries and try again"
+      );
+    }
+    const webtoken = jsonwebtoken.sign(
+      { uid: user.uid },
+      configs.JWT_SECRET_KEY as string
+    );
+
+    resp.status(StatusCodes.OK).json({
+      success: true,
+      message: "User logged in successfully",
+      token: webtoken,
     });
   });
 

@@ -9,7 +9,12 @@ const connection = new Sequelize({
   username: configs.POSTGRES_USER,
   password: configs.POSTGRES_PASSWORD,
   logging: false,
-  models: [path.join(__dirname, "..", "models")],
+  models: [path.resolve(__dirname, "../models")],
+  modelMatch: (filename, member) => {
+    return (
+      filename.substring(0, filename.indexOf(".model")) === member.toLowerCase()
+    );
+  },
 });
 
 export default connection;

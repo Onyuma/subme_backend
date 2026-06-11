@@ -1,4 +1,5 @@
 import { StatusCodes } from "http-status-codes";
+import * as z from "zod";
 
 export class ApiError extends Error {
   statusCode: number;
@@ -17,5 +18,11 @@ export class NotFoundError extends ApiError {
 export class BadRequestError extends ApiError {
   constructor(message: string) {
     super(StatusCodes.BAD_REQUEST, message);
+  }
+}
+
+export class ZodError extends z.ZodError {
+  constructor(zodIssue: z.core.$ZodIssue[]) {
+    super(zodIssue);
   }
 }

@@ -12,6 +12,11 @@ const routes: RouteParams[] = [
     handler: userController.postRegisterUser,
   },
   {
+    method: "POST",
+    route: "/login",
+    handler: userController.postLoginUser,
+  },
+  {
     method: "GET",
     route: "/deactivate",
     handler: userController.getDeactivateUser,

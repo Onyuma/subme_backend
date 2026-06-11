@@ -1,8 +1,6 @@
 import { DataTypes } from "sequelize";
 import { Column, Model, Table } from "sequelize-typescript";
-import bcrypt from "bcryptjs";
-
-@Table({ tableName: "profiles", timestamps: true })
+@Table({ tableName: "profiles", timestamps: true, modelName: "profile" })
 export default class Profile extends Model {
   @Column({
     type: DataTypes.UUID,

@@ -1,8 +1,7 @@
 import { DataTypes } from "sequelize";
 import { Column, Model, Table } from "sequelize-typescript";
 import bcrypt from "bcryptjs";
-
-@Table({ tableName: "users", timestamps: true })
+@Table({ tableName: "users", timestamps: true, modelName: "user" })
 export default class User extends Model {
   [x: string]: any;
   @Column({
