@@ -33,6 +33,96 @@ type Use = z.infer<typeof RouteParamsSchema>;
 export type Payload = {
   uid: string;
 };
+
+export namespace Squad {
+  export type BuyAirtimePayload = { phone_number: string; amount: number };
+
+  export type BuyAirtimeRawResponse = {
+    status?: number;
+    success: boolean;
+    message: string;
+    data: {
+      reference: string;
+      amount: string;
+      merchant_amount: string;
+      phone_number: string;
+      email?: null | string;
+      merchant_id: string;
+      wallet_batch_id: string;
+      value_reference: null | string;
+      network: string;
+      transaction_id: null | string;
+      type: string;
+      action: string;
+      status: string;
+      meta: string;
+      meta_json: {};
+      createdAt: string;
+      updatedAt: string;
+    };
+  };
+
+  export type BuyAirtimeResponse = {
+    reference: string;
+    amount: string;
+    phoneNumber: string;
+    network: string;
+    type: string;
+    action: string;
+    createdAt: string;
+    updatedAt: string;
+  };
+
+  type DataPlanRawResponse = {
+    plan_name: string;
+    bundle_value: string;
+    bundle_validity: string;
+    bundle_description: string;
+    bundle_price: string;
+    plan_code: string;
+    network: string;
+  };
+
+  export type RetrieveDataPlanRawResponse = {
+    status?: number;
+    success: boolean;
+    message: string;
+    data: DataPlanRawResponse[];
+  };
+
+  export type RetrieveDataPlanResponse = {
+    planName: string;
+    bundleValue: string;
+    bundleValidity: string;
+    bundleDescription: string;
+    bundlePrice: string;
+    planCode: string;
+    network: string;
+  };
+}
+export namespace DataReloaded {
+  export type DataPlanResponse = {
+    _id: string;
+    id: number;
+    dataplan_id: string;
+    plan_network: string;
+    plan_type: string;
+    month_validate: string;
+    plan: string;
+    my_price: string;
+    resellerPrice: string;
+    apiPrice: string;
+    __v: number;
+    isAvailable: boolean;
+    network: number;
+    plan_amount: string;
+    planCategory: string;
+    supplierPlanIds: {};
+    planSupplierMode: string;
+    supplierCostPrices: {};
+    price: number;
+  };
+}
 export namespace Paystack {
   export type InitializeTransactionArgs = {
     email: string;

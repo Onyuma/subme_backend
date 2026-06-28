@@ -18,7 +18,7 @@ const userMiddleWare = async (
   const userToken = payload.split(" ")[1];
 
   const token = webToken.decode(userToken) as JwtPayload;
-  console.log(token);
+
   if (!token) {
     throw new BadRequestError("Invalid token");
   }
@@ -38,9 +38,9 @@ const userMiddleWare = async (
     },
   });
   if (!profile?.is_active) {
-    throw new BadRequestError("Profile not active");
+    throw new BadRequestError("User account not active");
   }
-
+  req.profile = profile;
   req.user = user;
 
   next();

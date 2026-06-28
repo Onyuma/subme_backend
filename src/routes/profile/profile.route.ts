@@ -8,8 +8,13 @@ const profileRouter = express.Router();
 const routes: RouteParams[] = [
   {
     method: "GET",
-    route: "/details",
+    route: "/profile",
     handler: profileController.getUserProfile,
+  },
+  {
+    method: "GET",
+    route: "/details",
+    handler: profileController.getUserDetails,
   },
 ];
 

@@ -50,9 +50,9 @@ app.route("/test").post((req: Request, resp: Response, next: NextFunction) => {
 });
 
 app.use("/paystack", paymentRouter);
-app.use("/vtu", vtuRouter);
+app.use("/vtu", userMiddleWare, vtuRouter);
 app.use("/user", userRouter);
-app.use("/wallet", walletRouter);
+app.use("/wallet", userMiddleWare, walletRouter);
 app.use("/profile", profileRouter);
 app.use("/transaction", userMiddleWare, transactionRouter);
 

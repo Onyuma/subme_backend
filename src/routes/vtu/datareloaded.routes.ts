@@ -2,6 +2,7 @@ import express, { NextFunction, Request, Response } from "express";
 import { NotFoundError } from "../../utils/ApiError";
 import { RouteParams } from "../../types";
 import datareloadedController from "./datareloaded.controller";
+import squadController from "./squad.controller";
 
 const vtuRouter = express.Router();
 
@@ -10,6 +11,16 @@ const routes: RouteParams[] = [
     method: "GET",
     route: "/fetch",
     handler: datareloadedController.getDataPlan,
+  },
+  {
+    method: "POST",
+    route: "/airtime/buy",
+    handler: squadController.postPurchaseAirtime,
+  },
+  {
+    method: "GET",
+    route: "/data/plan",
+    handler: squadController.getRetrieveDataplan,
   },
 ];
 

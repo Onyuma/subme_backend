@@ -5,9 +5,10 @@ import asyncWrapper from "../../utils/asyncwrapper";
 import { StatusCodes } from "http-status-codes";
 
 class WalletController {
-  postFundWallet = asyncWrapper(async (req: Request, resp: Response) => {
-    const { uid, amount } = req.body;
-    if (!uid || typeof uid !== "string" || !amount) {
+  postFundWallet = asyncWrapper(async (req: any, resp: Response) => {
+    const { amount } = req.body;
+    const user = req.user;
+    if (!user.uid || typeof user.uid !== "string" || !amount) {
       throw new BadRequestError("User ID and amount are required");
     }
     const parsedAmount = parseFloat(amount);
@@ -15,23 +16,7 @@ class WalletController {
     if (typeof parsedAmount !== "number" || parsedAmount <= 0) {
       throw new BadRequestError("Invalid amount");
     }
-    const user = await User.findOne({
-      where: {
-        uid,
-      },
-    });
-    if (!user) {
-      throw new BadRequestError("User not found");
-    }
-    const profile = await user.getProfile();
-    if (!profile) {
-      throw new BadRequestError("User profile not found");
-    }
-    if (!profile.is_active) {
-      throw new BadRequestError(
-        "User account deactivated. Please contact support."
-      );
-    }
+
     const wallet = await user.getWallet();
     if (!wallet) {
       throw new BadRequestError("User wallet not found");
@@ -49,8 +34,10 @@ class WalletController {
     });
   });
 
-  postTransferFunds = asyncWrapper(async (req: Request, resp: Response) => {
-    const { senderUid, recipientUid, amount } = req.body;
+  postTransferFunds = asyncWrapper(async (req: any, resp: Response) => {
+    const { recipientUid, amount } = req.body;
+    const senderUid = req.user.uid;
+
     if (
       !senderUid ||
       typeof senderUid !== "string" ||
@@ -58,9 +45,7 @@ class WalletController {
       typeof recipientUid !== "string" ||
       !amount
     ) {
-      throw new BadRequestError(
-        "Sender ID, recipient ID, and amount are required"
-      );
+      throw new BadRequestError("Recipient ID, and amount are required");
     }
     if (recipientUid === senderUid) {
       throw new BadRequestError("Sender and recipient cannot be the same");
@@ -129,8 +114,8 @@ class WalletController {
     });
   });
 
-  getWalletBalance = asyncWrapper(async (req: Request, resp: Response) => {
-    const { uid } = req.query;
+  getWalletBalance = asyncWrapper(async (req: any, resp: Response) => {
+    const uid = req.user.uid;
     if (!uid || typeof uid !== "string") {
       throw new BadRequestError("User ID is required");
     }
@@ -146,7 +131,7 @@ class WalletController {
     if (!wallet) {
       throw new BadRequestError("User wallet not found");
     }
-    // Implement logic to retrieve wallet balance here
+    console.log(wallet);
     const balance = wallet.balance;
 
     resp.status(StatusCodes.OK).json({

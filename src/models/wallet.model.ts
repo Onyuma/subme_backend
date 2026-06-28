@@ -9,7 +9,11 @@ export default class Wallet extends Model {
     defaultValue: DataTypes.UUIDV4,
   })
   uid!: string;
-  @Column({ type: DataTypes.INTEGER, allowNull: false, defaultValue: 0 })
+  @Column({
+    type: DataTypes.FLOAT({ decimals: 2 }),
+    allowNull: false,
+    defaultValue: 0,
+  })
   balance!: number;
   @Column({ type: DataTypes.BOOLEAN, allowNull: false, defaultValue: true })
   is_active!: boolean;
