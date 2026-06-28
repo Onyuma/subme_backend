@@ -2,9 +2,9 @@ import { Sequelize } from "sequelize-typescript";
 import configs from "./configs";
 import path from "node:path";
 
-let connection;
+let connection: Sequelize;
 
-const isProduction = process.env.NODE_ENV === "production";
+const isProduction = configs.NODE_ENV === "production";
 
 if (!isProduction) {
   connection = new Sequelize({
