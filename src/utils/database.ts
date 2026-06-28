@@ -26,6 +26,14 @@ if (!isProduction) {
   connection = new Sequelize(configs.DATABASE_URL as string, {
     dialect: "postgres",
     protocol: "postgres",
+    logging: false,
+    models: [path.resolve(__dirname, "../models")],
+    modelMatch: (filename, member) => {
+      return (
+        filename.substring(0, filename.indexOf(".model")) ===
+        member.toLowerCase()
+      );
+    },
     dialectOptions: {
       ssl: isProduction
         ? {
