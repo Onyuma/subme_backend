@@ -8,14 +8,14 @@ import { convertObjectKeysToCamelCase } from "../utils/snaketocamelconverter";
 
 class SquadAPI {
   axiosInstance: AxiosInstance;
-  baseUrl = configs.SQUAD_SANDBOX_BASE_URL as string;
+  baseUrl = configs.SQUAD_LIVE_BASE_URL as string;
 
   constructor() {
     this.axiosInstance = axios.create({
       baseURL: this.baseUrl,
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${configs.SQUAD_SANDBOX_API_SECRET_KEY}`,
+        Authorization: `Bearer ${configs.SQUAD_LIVE_SECRET_KEY}`,
       },
     });
   }

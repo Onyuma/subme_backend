@@ -34,6 +34,48 @@ export type Payload = {
   uid: string;
 };
 
+export namespace Payflex {
+  export type CableProviderResponse = {
+    status: string;
+    providers: [
+      {
+        identifier: string;
+        name: string;
+      },
+    ];
+  };
+
+  export type BuyAirtimePayload = {
+    network: "mtn" | "glo" | "airtel" | "9mobile";
+    amount: number;
+    mobile_number: string;
+  };
+
+  export type BuyAirtimeRawResponse = {
+    status: string;
+    reference: string;
+    amount: string;
+    charged: string;
+    discount: string;
+    balance: string;
+    id: string;
+    network: string;
+    mobile_number: string;
+    timestamp: string;
+    message: string;
+    transaction_id: number;
+  };
+
+  export type BuyAirtimeResponse = {
+    reference: string;
+    amount: string;
+    mobileNumber: string;
+    network: string;
+    message: string;
+    timestamp: string;
+  };
+}
+
 export namespace Squad {
   export type BuyAirtimePayload = { phone_number: string; amount: number };
 

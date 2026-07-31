@@ -12,9 +12,25 @@ const dbrelations = () => {
 
   User.hasMany(Transaction, {
     constraints: true,
+    foreignKey: "senderId",
+    as: "SentTransaction",
     onDelete: "CASCADE",
   });
-  Transaction.belongsTo(User);
+  Transaction.belongsTo(User, {
+    foreignKey: "senderId",
+    as: "Sender",
+  });
+
+  User.hasMany(Transaction, {
+    constraints: true,
+    foreignKey: "recipientId",
+    as: "ReceivedTransaction",
+    onDelete: "CASCADE",
+  });
+  Transaction.belongsTo(User, {
+    foreignKey: "recipientId",
+    as: "Recipient",
+  });
 };
 
 export default dbrelations;

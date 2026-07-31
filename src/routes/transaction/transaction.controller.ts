@@ -5,6 +5,7 @@ import User from "../../models/user.model";
 import Transaction from "../../models/transaction.model";
 import { BadRequestError, ZodError } from "../../utils/ApiError";
 import { TransactionSchema } from "../../types";
+import { Op, or, Sequelize } from "sequelize";
 
 class TransactionController {
   postCreateTransaction = asyncWrapper(async (req: any, resp: Response) => {
@@ -53,18 +54,47 @@ class TransactionController {
         limit,
         offset,
         where: {
-          userUid: user.uid,
+          [Op.or]: [{ senderId: user.uid }, { recipientId: user.uid }],
         },
+        attributes: [
+          "uid",
+          "transaction_id",
+          "network",
+          "price",
+          "category",
+          "validity",
+          "phone_number",
+          [
+            Sequelize.literal(
+              `CASE WHEN "senderId" = ${user.uid} THEN 'sender' ELSE 'receiver' END`
+            ),
+            "role",
+          ],
+        ],
+        include: [
+          { model: User, as: "Sender", attributes: ["email"] },
+          { model: User, as: "Recipient", attributes: ["email"] },
+        ],
         order: [["createdAt", "DESC"]],
       });
 
     if (!transactions) {
       throw new BadRequestError("No transaction found");
     }
+
+    const formattedTransactions = transactions.map((trx) => {
+      const data = trx.toJSON();
+      data.counterParty = data.role === "sender" ? data.Recipient : data.Sender;
+
+      delete data.Sender;
+      delete data.Recipient;
+
+      return data;
+    });
     resp.status(200).json({
       success: true,
       data: {
-        transactions,
+        formattedTransactions,
         total,
       },
     });

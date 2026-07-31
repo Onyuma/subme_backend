@@ -3,6 +3,8 @@ import { NotFoundError } from "../../utils/ApiError";
 import { RouteParams } from "../../types";
 import datareloadedController from "./datareloaded.controller";
 import squadController from "./squad.controller";
+import payflexApi from "../../services/payflex.api";
+import payflexController from "./payflex.controller";
 
 const vtuRouter = express.Router();
 
@@ -15,12 +17,17 @@ const routes: RouteParams[] = [
   {
     method: "POST",
     route: "/airtime/buy",
-    handler: squadController.postPurchaseAirtime,
+    handler: payflexController.postPurchaseAirtime,
   },
   {
     method: "GET",
     route: "/data/plan",
     handler: squadController.getRetrieveDataplan,
+  },
+  {
+    method: "GET",
+    route: "/cable/providers",
+    handler: payflexController.getCableProviders,
   },
 ];
 
