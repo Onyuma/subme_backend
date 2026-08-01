@@ -51,6 +51,41 @@ export namespace Payflex {
     mobile_number: string;
   };
 
+  export type BuyDataRawResponse = {
+    status: string;
+    reference: string;
+    amount: string;
+    charged: string;
+    discount: string;
+    balance: string;
+    plan: string;
+    network: string;
+    mobile_number: string;
+    timestamp: string;
+    message: string;
+    transaction_id: number;
+  };
+
+  export type BuyDataResponse = {
+    status: string;
+    reference: string;
+    amount: string;
+    charged: string;
+    discount: string;
+    balance: string;
+    plan: string;
+    network: string;
+    mobileNumber: string;
+    timestamp: string;
+    message: string;
+    transactionId: number;
+  };
+
+  export type BuyDataPayload = {
+    network: string;
+    mobile_number: string;
+    plan_code: string;
+  };
   export type BuyAirtimeRawResponse = {
     status: string;
     reference: string;
@@ -65,7 +100,29 @@ export namespace Payflex {
     message: string;
     transaction_id: number;
   };
-
+  export type RetrieveNetworkListRawResponse = {
+    networks: [
+      {
+        name: string;
+        identifier: string;
+      },
+    ];
+  };
+  export type DataPlan = {
+    planCode: string;
+    amount: number;
+    label: string;
+  };
+  export type RetrieveDataPlanResponse = {
+    network: string;
+    plans: [
+      {
+        plan_code: string;
+        amount: number;
+        label: string;
+      },
+    ];
+  };
   export type BuyAirtimeResponse = {
     reference: string;
     amount: string;

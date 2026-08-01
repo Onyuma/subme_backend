@@ -20,9 +20,19 @@ const routes: RouteParams[] = [
     handler: payflexController.postPurchaseAirtime,
   },
   {
+    method: "POST",
+    route: "/data/buy",
+    handler: payflexController.postPurchaseData,
+  },
+  {
     method: "GET",
-    route: "/data/plan",
-    handler: squadController.getRetrieveDataplan,
+    route: "/data/list",
+    handler: payflexController.getNetworkList,
+  },
+  {
+    method: "GET",
+    route: "/data/plans/:planId",
+    handler: payflexController.getDataPlan,
   },
   {
     method: "GET",
