@@ -361,7 +361,7 @@ class AuthContoller {
       });
       await user.save();
 
-      throw new BadRequestError(`Error sending email ${error.message}`);
+      throw new BadRequestError(`Error sending email ${JSON.stringify(error)}`);
     }
   });
   patchResetPassword = asyncWrapper(async (req: Request, resp: Response) => {});
