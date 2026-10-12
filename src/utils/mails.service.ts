@@ -1,4 +1,5 @@
 import nodemailer from "nodemailer";
+import { BadRequestError } from "./ApiError";
 
 class Email {
   sendMail = async (options: {
@@ -11,17 +12,24 @@ class Email {
       // service: "Gmail",
       // auth: { user: "johnonyumaudu@gmail.com", pass: "Onyuma@2019" },
       host: "sandbox.smtp.mailtrap.io",
-      port: 25,
+      port: 2525,
       auth: { user: "bc04f924ec4c7a", pass: "b8b5b59ee89705" },
     });
 
     // Send the email
-    await transporter.sendMail({
-      from: "Customer Care <noreply@subme.com.ng>",
-      to: options.email,
-      subject: options.subject,
-      html: options.html,
-    });
+    await transporter.sendMail(
+      {
+        from: "Customer Care <noreply@subme.com.ng>",
+        to: options.email,
+        subject: options.subject,
+        html: options.html,
+      },
+      (err, info) => {
+        if (err) {
+          throw new BadRequestError(err.message || "Error sending email");
+        }
+      }
+    );
   };
 }
 
