@@ -160,7 +160,7 @@ class AuthContoller {
       token: hashedToken,
       expiresIn: Date.now() + 10 * 60 * 1000,
     });
-    const result = await user.save();
+    await user.save();
 
     // Send token to user's email
     try {
@@ -356,8 +356,8 @@ class AuthContoller {
       resp.json({ success: true, message: "Email sent successfully." });
     } catch (error: any) {
       user.set({
-        token: undefined,
-        expiresIn: undefined,
+        token: null,
+        expiresIn: null,
       });
       await user.save();
 
