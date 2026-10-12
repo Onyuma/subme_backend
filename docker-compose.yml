@@ -27,6 +27,15 @@ services:
     depends_on:
       - postgres
     restart: on-failure
+    develop:
+      watch:
+        - path: ./package.json
+          action: rebuild
+        - path: .
+          target: /usr/src/app
+          action: sync
+          ignore:
+            - node_modules/
 
   pgadmin:
     container_name: pgadmin

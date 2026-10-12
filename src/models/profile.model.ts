@@ -1,7 +1,23 @@
 import { DataTypes } from "sequelize";
-import { Column, Model, Table } from "sequelize-typescript";
+import {
+  BelongsTo,
+  Column,
+  ForeignKey,
+  Model,
+  Table,
+} from "sequelize-typescript";
+import User from "./user.model";
 @Table({ tableName: "profiles", timestamps: true, modelName: "profile" })
 export default class Profile extends Model {
+  @ForeignKey(() => User)
+  @Column({
+    type: DataTypes.UUID,
+    allowNull: false,
+  })
+  userUid!: string;
+  @BelongsTo(() => User)
+  user!: User;
+
   @Column({
     type: DataTypes.UUID,
     primaryKey: true,

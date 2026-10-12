@@ -2,6 +2,7 @@ import express, { NextFunction, Request, Response } from "express";
 import { NotFoundError } from "../../utils/ApiError";
 import { RouteParams } from "../../types";
 import userController from "./user.controller";
+import authController from "../auth/auth.controller";
 
 const userRouter = express.Router();
 

@@ -59,9 +59,11 @@ class PayflexApi {
         return;
       }
       const data = (await response.json()) as Payflex.BuyAirtimeRawResponse;
+
       return convertObjectKeysToCamelCase<Payflex.BuyAirtimeResponse>(data);
     } catch (err: any) {
-      throw new BadRequestError(err.message);
+      console.log("catch", err);
+      throw new BadRequestError(err);
     }
 
     // const response =
@@ -145,7 +147,6 @@ class PayflexApi {
       throw new BadRequestError(err.message);
     }
   };
-
   cableProviders = async () => {
     const response =
       await this.axiosInstance.get<Payflex.CableProviderResponse>(

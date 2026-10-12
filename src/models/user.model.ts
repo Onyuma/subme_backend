@@ -1,6 +1,7 @@
 import { DataTypes } from "sequelize";
 import { Column, Model, Table } from "sequelize-typescript";
 import bcrypt from "bcryptjs";
+
 @Table({ tableName: "users", timestamps: true, modelName: "user" })
 export default class User extends Model {
   [x: string]: any;
@@ -21,4 +22,16 @@ export default class User extends Model {
     },
   })
   password!: string;
+  @Column({
+    type: DataTypes.DATE,
+  })
+  changedAt!: string;
+  @Column({
+    type: DataTypes.STRING,
+  })
+  token!: string;
+  @Column({
+    type: DataTypes.DATE,
+  })
+  expiresIn!: string;
 }

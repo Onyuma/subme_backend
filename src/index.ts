@@ -13,12 +13,25 @@ import * as z from "zod";
 import profileRouter from "./routes/profile/profile.route";
 import transactionRouter from "./routes/transaction/transaction.route";
 import userMiddleWare from "./utils/Middlewares/user.middleware";
+import rateLimit from "express-rate-limit";
+import authController from "./routes/auth/auth.controller";
+import authRouter from "./routes/auth/auth.routes";
 
 const app: Application = express();
 
 app.use(helmet());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+// app.use(
+//   rateLimit({
+//     windowMs: 15 * 60 * 1000, // 15 minutes window
+//     limit: 10, // Limit each IP to 100 requests per window
+//     message: "Too many requests from this IP, please try again later.",
+//     statusCode: 429, // HTTP status code for "Too Many Requests"
+//     standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+//     legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+//   })
+// );
 
 const ReqType = z.object({
   email: z.email(),
@@ -36,19 +49,18 @@ const base = ReqType.refine((data) => data.password === data.confirm_password, {
   },
 });
 
-app.route("/test").post((req: Request, resp: Response, next: NextFunction) => {
-  const body = req.body;
-  const parsed = ReqType.safeParse(body);
-  if (parsed.error) {
-    throw new ZodError(parsed.error.issues);
+app.use(
+  "/protect",
+  authController.protector,
+  // authController.restrictTo(null),
+  (req: any, res: Response, next: NextFunction) => {
+    res.json({
+      user: req.user,
+    });
   }
-  resp.status(200).json({
-    success: true,
-    message: "Received",
-    data: parsed.data,
-  });
-});
+);
 
+app.use("/auth", authRouter);
 app.use("/paystack", paymentRouter);
 app.use("/vtu", userMiddleWare, vtuRouter);
 app.use("/user", userRouter);
@@ -75,12 +87,19 @@ process.on("unhandledRejection", (reason, promise) => {
 dbrelations();
 const startServer = async () => {
   const PORT = configs.PORT;
+
   connection
     .authenticate()
     .then(async () => {
       await connection.sync();
       app.listen(PORT, () => {
         console.log(`Server is running on port ${PORT}`);
+        console.log(process.env.NODE_ENV);
+        if (process.env.NODE_ENV === "production") {
+          console.log("PRODUCTION MODE ACTIVATED SUCCESSFULLY....New");
+        } else {
+          console.log("DEVELOPMENT MODE ACTIVATED SUCCESSFULLY....");
+        }
       });
     })
     .catch((err) => {

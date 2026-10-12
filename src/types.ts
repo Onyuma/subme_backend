@@ -80,7 +80,6 @@ export namespace Payflex {
     message: string;
     transactionId: number;
   };
-
   export type BuyDataPayload = {
     network: string;
     mobile_number: string;

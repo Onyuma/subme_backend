@@ -101,6 +101,7 @@ class PayflexController {
       plan_code: planCode,
     };
     const response = await payflexApi.buyData(payload);
+
     await wallet.save();
 
     resp.status(StatusCodes.OK).json({
