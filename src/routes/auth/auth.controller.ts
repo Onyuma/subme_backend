@@ -10,7 +10,7 @@ import connection from "../../utils/database";
 import { LoginUserScheme } from "../../types";
 import bcrypt from "bcryptjs";
 import Profile from "../../models/profile.model";
-// import sendMail from "../../utils/mails.service";
+import sendMail from "../../utils/mails.service";
 
 class AuthContoller {
   postSignup = asyncWrapper(async (req: Request, resp: Response) => {
@@ -163,206 +163,206 @@ class AuthContoller {
     const result = await user.save();
 
     // Send token to user's email
-    // try {
-    //   await sendMail.sendMail({
-    //     email: user.email,
-    //     subject: "Forgot Password",
-    //     html: `<!doctype html>
-    //     <html lang="en">
-    //       <head>
-    //         <meta charset="UTF-8" />
-    //         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    //         <title>Reset Password</title>
-    //         <style>
-    //           @media (prefers-color-scheme: dark) {
-    //             .email-bg {
-    //               background-color: #111111 !important;
-    //             }
-    //             .card-bg {
-    //               background-color: #1a1a1a !important;
-    //             }
-    //             .text-main {
-    //               color: #f3f4f6 !important;
-    //             }
-    //             .text-muted {
-    //               color: #9ca3af !important;
-    //             }
-    //             .btn-accent {
-    //               background-color: #6366f1 !important;
-    //               color: #ffffff !important;
-    //             }
-    //           }
-    //         </style>
-    //       </head>
-    //       <body
-    //         style="
-    //           margin: 0;
-    //           padding: 0;
-    //           font-family:
-    //             -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto,
-    //             Helvetica, Arial, sans-serif;
-    //           -webkit-font-smoothing: antialiased;
-    //         "
-    //       >
-    //         <table
-    //           border="0"
-    //           cellpadding="0"
-    //           cellspacing="0"
-    //           width="100%"
-    //           class="email-bg"
-    //           style="background-color: #fafafa; padding: 60px 0"
-    //         >
-    //           <tr>
-    //             <td align="center">
-    //               <table
-    //                 border="0"
-    //                 cellpadding="0"
-    //                 cellspacing="0"
-    //                 width="540"
-    //                 class="card-bg"
-    //                 style="
-    //                   background-color: #ffffff;
-    //                   padding: 48px;
-    //                   border-radius: 12px;
-    //                 "
-    //               >
-    //                 <tr>
-    //                   <td align="left" style="padding-bottom: 32px">
-    //                     <div
-    //                       class="text-main"
-    //                       style="
-    //                         font-size: 20px;
-    //                         font-weight: 700;
-    //                         letter-spacing: -0.5px;
-    //                         color: #000000;
-    //                       "
-    //                     >
-    //                      SUBME<span style="color: #4f46e5">VTU</span>
-    //                     </div>
-    //                   </td>
-    //                 </tr>
-    //                 <tr>
-    //                   <td align="left">
-    //                     <h1
-    //                       class="text-main"
-    //                       style="
-    //                         margin: 0 0 16px 0;
-    //                         color: #111827;
-    //                         font-size: 24px;
-    //                         font-weight: 700;
-    //                         letter-spacing: -0.5px;
-    //                       "
-    //                     >
-    //                       Password Reset
-    //                     </h1>
-    //                   </td>
-    //                 </tr>
-    //                 <tr>
-    //                   <td align="left">
-    //                     <p
-    //                       class="text-muted"
-    //                       style="
-    //                         margin: 0 0 24px 0;
-    //                         color: #4b5563;
-    //                         font-size: 15px;
-    //                         line-height: 1.6;
-    //                       "
-    //                     >
-    //                       We received a request to change your account password. If this
-    //                       was you, use the secure confirmation button below to proceed.
-    //                     </p>
-    //                   </td>
-    //                 </tr>
-    //                 <tr>
-    //                   <td align="left" style="padding-bottom: 32px">
-    //                     <table border="0" cellpadding="0" cellspacing="0">
-    //                       <tr>
-    //                         <td
-    //                           align="center"
-    //                           bgcolor="#4f46e5"
-    //                           style="border-radius: 8px"
-    //                           class="btn-accent"
-    //                         >
-    //                           <a
-    //                             href=''
-    //                             target="_blank"
-    //                             style="
-    //                               display: inline-block;
-    //                               padding: 14px 32px;
-    //                               font-size: 15px;
-    //                               color: #ffffff;
-    //                               text-decoration: none;
-    //                               font-weight: 600;
-    //                               border-radius: 8px;
-    //                             "
-    //                             >Modify Password</a
-    //                           >
-    //                         </td>
-    //                       </tr>
-    //                     </table>
-    //                   </td>
-    //                 </tr>
-    //                 <tr>
-    //                   <td
-    //                     align="left"
-    //                     style="
-    //                       border-left: 2px solid #e5e7eb;
-    //                       padding-left: 16px;
-    //                       margin-bottom: 32px;
-    //                     "
-    //                   >
-    //                     <p
-    //                       class="text-muted"
-    //                       style="
-    //                         margin: 0;
-    //                         color: #6b7280;
-    //                         font-size: 13px;
-    //                         line-height: 1.5;
-    //                       "
-    //                     >
-    //                       <strong>Security note:</strong> This action window expires in
-    //                       10 minutes. If you did not generate this link, you can delete
-    //                       this email without any further action.
-    //                     </p>
-    //                   </td>
-    //                 </tr>
-    //                 <tr>
-    //                   <td
-    //                     align="left"
-    //                     style="padding-top: 32px; border-top: 1px solid #f3f4f6"
-    //                   >
-    //                     <p
-    //                       class="text-muted"
-    //                       style="
-    //                         margin: 0;
-    //                         color: #9ca3af;
-    //                         font-size: 12px;
-    //                         line-height: 1.5;
-    //                       "
-    //                     >
-    //                       Sent automatically by SUBME VTU. To manage your communication
-    //                       profiles, visit your platform settings dashboard.
-    //                     </p>
-    //                   </td>
-    //                 </tr>
-    //               </table>
-    //             </td>
-    //           </tr>
-    //         </table>
-    //       </body>
-    //     </html>
-    //     `,
-    //   });
-    // } catch (error: any) {
-    //   user.set({
-    //     token: undefined,
-    //     expiresIn: undefined,
-    //   });
-    //   await user.save();
+    try {
+      await sendMail.sendMail({
+        email: user.email,
+        subject: "Forgot Password",
+        html: `<!doctype html>
+        <html lang="en">
+          <head>
+            <meta charset="UTF-8" />
+            <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+            <title>Reset Password</title>
+            <style>
+              @media (prefers-color-scheme: dark) {
+                .email-bg {
+                  background-color: #111111 !important;
+                }
+                .card-bg {
+                  background-color: #1a1a1a !important;
+                }
+                .text-main {
+                  color: #f3f4f6 !important;
+                }
+                .text-muted {
+                  color: #9ca3af !important;
+                }
+                .btn-accent {
+                  background-color: #6366f1 !important;
+                  color: #ffffff !important;
+                }
+              }
+            </style>
+          </head>
+          <body
+            style="
+              margin: 0;
+              padding: 0;
+              font-family:
+                -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto,
+                Helvetica, Arial, sans-serif;
+              -webkit-font-smoothing: antialiased;
+            "
+          >
+            <table
+              border="0"
+              cellpadding="0"
+              cellspacing="0"
+              width="100%"
+              class="email-bg"
+              style="background-color: #fafafa; padding: 60px 0"
+            >
+              <tr>
+                <td align="center">
+                  <table
+                    border="0"
+                    cellpadding="0"
+                    cellspacing="0"
+                    width="540"
+                    class="card-bg"
+                    style="
+                      background-color: #ffffff;
+                      padding: 48px;
+                      border-radius: 12px;
+                    "
+                  >
+                    <tr>
+                      <td align="left" style="padding-bottom: 32px">
+                        <div
+                          class="text-main"
+                          style="
+                            font-size: 20px;
+                            font-weight: 700;
+                            letter-spacing: -0.5px;
+                            color: #000000;
+                          "
+                        >
+                         SUBME<span style="color: #4f46e5">VTU</span>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td align="left">
+                        <h1
+                          class="text-main"
+                          style="
+                            margin: 0 0 16px 0;
+                            color: #111827;
+                            font-size: 24px;
+                            font-weight: 700;
+                            letter-spacing: -0.5px;
+                          "
+                        >
+                          Password Reset
+                        </h1>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td align="left">
+                        <p
+                          class="text-muted"
+                          style="
+                            margin: 0 0 24px 0;
+                            color: #4b5563;
+                            font-size: 15px;
+                            line-height: 1.6;
+                          "
+                        >
+                          We received a request to change your account password. If this
+                          was you, use the secure confirmation button below to proceed.
+                        </p>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td align="left" style="padding-bottom: 32px">
+                        <table border="0" cellpadding="0" cellspacing="0">
+                          <tr>
+                            <td
+                              align="center"
+                              bgcolor="#4f46e5"
+                              style="border-radius: 8px"
+                              class="btn-accent"
+                            >
+                              <a
+                                href=''
+                                target="_blank"
+                                style="
+                                  display: inline-block;
+                                  padding: 14px 32px;
+                                  font-size: 15px;
+                                  color: #ffffff;
+                                  text-decoration: none;
+                                  font-weight: 600;
+                                  border-radius: 8px;
+                                "
+                                >Modify Password</a
+                              >
+                            </td>
+                          </tr>
+                        </table>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td
+                        align="left"
+                        style="
+                          border-left: 2px solid #e5e7eb;
+                          padding-left: 16px;
+                          margin-bottom: 32px;
+                        "
+                      >
+                        <p
+                          class="text-muted"
+                          style="
+                            margin: 0;
+                            color: #6b7280;
+                            font-size: 13px;
+                            line-height: 1.5;
+                          "
+                        >
+                          <strong>Security note:</strong> This action window expires in
+                          10 minutes. If you did not generate this link, you can delete
+                          this email without any further action.
+                        </p>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td
+                        align="left"
+                        style="padding-top: 32px; border-top: 1px solid #f3f4f6"
+                      >
+                        <p
+                          class="text-muted"
+                          style="
+                            margin: 0;
+                            color: #9ca3af;
+                            font-size: 12px;
+                            line-height: 1.5;
+                          "
+                        >
+                          Sent automatically by SUBME VTU. To manage your communication
+                          profiles, visit your platform settings dashboard.
+                        </p>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            </table>
+          </body>
+        </html>
+        `,
+      });
+      resp.json({ success: true, message: "Email sent successfully." });
+    } catch (error: any) {
+      user.set({
+        token: undefined,
+        expiresIn: undefined,
+      });
+      await user.save();
 
-    //   throw new BadRequestError(`Error sending email ${error.message}`);
-    // }
-    resp.json({ success: true, message: "Email sent successfully" });
+      throw new BadRequestError(`Error sending email ${error.message}`);
+    }
   });
   patchResetPassword = asyncWrapper(async (req: Request, resp: Response) => {});
 
