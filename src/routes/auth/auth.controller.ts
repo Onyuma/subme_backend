@@ -156,12 +156,6 @@ class AuthContoller {
 
     const hashedToken = createHash("sha256").update(token).digest("hex");
 
-    user.set({
-      token: hashedToken,
-      expiresIn: Date.now() + 10 * 60 * 1000,
-    });
-    await user.save();
-
     // Send token to user's email
     try {
       await sendMail.sendMail({
@@ -284,7 +278,7 @@ class AuthContoller {
                               class="btn-accent"
                             >
                               <a
-                                href=''
+                                href='${req.protocol}://${req.get("host")}/auth/reset-password/${token}'
                                 target="_blank"
                                 style="
                                   display: inline-block;
@@ -353,6 +347,11 @@ class AuthContoller {
         </html>
         `,
       });
+      user.set({
+        token: hashedToken,
+        expiresIn: Date.now() + 10 * 60 * 1000,
+      });
+      await user.save();
       resp.json({ success: true, message: "Email sent successfully." });
     } catch (error: any) {
       user.set({
